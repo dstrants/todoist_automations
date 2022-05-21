@@ -1,9 +1,6 @@
-from pymongo.mongo_client import MongoClient
+from utils.mongo import mongo_collection
 
 
 def create_user(user: dict):
-    client = MongoClient("mongodb://root:example@localhost:27017/")
-    db = client['todoist']
-    users_collection = db['users']
-
+    users_collection = mongo_collection("users")
     users_collection.insert_one(user)

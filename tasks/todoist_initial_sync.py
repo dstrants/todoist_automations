@@ -1,5 +1,6 @@
 from asyncio import gather
-from pymongo.mongo_client import MongoClient
+
+from utils.mongo import mongo_collection
 
 
 def todoist_instances_to_dict(entries: list) -> list[dict]:
@@ -23,9 +24,6 @@ async def todoist_import_all(state: dict):
 
 async def massive_import(state, kind: str):
     data = todoist_instances_to_dict(state[kind])
-
-    client = MongoClient("mongodb://root:example@localhost:27017/")
-    db = client['todoist']
-    collection = db[kind]
+    collection = mongo_collection(kind)
     collection.insert_many(data)
 
