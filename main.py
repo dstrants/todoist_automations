@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse
 from config.constants import TODOIST_CLIENT_ID, TODOIST_CLIENT_SECRET, TODOIST_STATE_STRING
 from models.todoist import TodoistWebhook
 from tasks.todoist_auth import todoist_oauth_flow_step_2
-from tasks.todoist_crud import create_task
+from tasks.todoist_crud import create_task, update_task, delete_task
 from utils.start_up import startup_ensure_mongo_unique_id_indexes
 
 
@@ -14,8 +14,14 @@ app = FastAPI()
 app.on_event("startup")(startup_ensure_mongo_unique_id_indexes)
 
 @app.post("/todoist/webhooks")
-async def todoist_webhooks(item: TodoistWebhook, background_tasks: BackgroundTasks):
-    background_tasks.add_task(create_task, webhook=item)
+async def todoist_webhooks(webhook: TodoistWebhook, background_tasks: BackgroundTasks):
+    match webhook.event_name:
+        case "item:added":
+            background_tasks.add_task(create_task, webhook=webhook)
+        case "item:updated":
+            background_tasks.add_task(update_task, webhook=webhook)
+        case "item:deleted":
+            background_tasks.add_task(delete_task, webhook=webhook)
     return {"message": "Item has been created"}
 
 
