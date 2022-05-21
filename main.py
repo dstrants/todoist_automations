@@ -1,4 +1,4 @@
-from fastapi import BackgroundTasks, FastAPI, Response, status
+from fastapi import BackgroundTasks, FastAPI, Request, Response, status
 from fastapi.responses import RedirectResponse
 
 
@@ -7,6 +7,7 @@ from models.todoist import TodoistWebhook
 from tasks.todoist_auth import todoist_oauth_flow_step_2
 from tasks.todoist_crud import create_task, update_task, delete_task
 from utils.start_up import startup_ensure_mongo_unique_id_indexes
+from utils.security import todoist_validate_webhook_hmac
 
 
 app = FastAPI()
@@ -14,7 +15,10 @@ app = FastAPI()
 app.on_event("startup")(startup_ensure_mongo_unique_id_indexes)
 
 @app.post("/todoist/webhooks")
-async def todoist_webhooks(webhook: TodoistWebhook, background_tasks: BackgroundTasks):
+async def todoist_webhooks(request: Request, response: Response, webhook: TodoistWebhook, background_tasks: BackgroundTasks):
+    if not await todoist_validate_webhook_hmac(request=request):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"message": "Request does not have the right format"}
     match webhook.event_name:
         case "item:added":
             background_tasks.add_task(create_task, webhook=webhook)
