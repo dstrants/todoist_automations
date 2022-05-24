@@ -1,0 +1,7 @@
+*/__pycache__/**
+venv/
+.gitignore
+.vscode/
+.pytest_cache/**
+Makefile
+test_main.py
