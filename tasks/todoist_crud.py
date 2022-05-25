@@ -1,5 +1,6 @@
 import pendulum
 
+from config.constants import TIMEZONE
 from models.todoist import TodoistWebhook
 from tasks.automations_items import automations_priority_labelling
 from utils.mongo import mongo_collection
@@ -12,7 +13,12 @@ def create_task(webhook: TodoistWebhook) -> None:
 
 def update_task(webhook: TodoistWebhook) -> None:
     items_collection = mongo_collection()
-    items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()})
+    result = items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()})
+    if not result.matched_count:
+        # TODO: Replace with actual logging
+        print("Task with id {webhook.event_data.id} has not been found. Will be created!")
+        create_task(webhook=webhook)
+        return None
     automations_priority_labelling(webhook.event_data)
 
 
@@ -29,5 +35,5 @@ def complete_task(webhook: TodoistWebhook) -> None:
         'task_id': webhook.event_data.id,
         'checked': webhook.event_data.checked,
         'uid': webhook.event_data.user_id,
-        'timestamp': pendulum.now()
+        'timestamp': pendulum.now(tz=TIMEZONE)
          })
