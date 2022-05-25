@@ -21,4 +21,4 @@ RUN apk add --no-cache libressl-dev musl-dev libffi-dev gcc  gcc make g++ zlib-d
     && pip install --disable-pip-version-check --no-cache-dir poetry\
     && poetry install --no-root --no-dev -n
 
-ENTRYPOINT [ "uvicorn", "main:app", "--host", "${HOST}", "--port", "${PORT}" ]
+ENTRYPOINT [ "poetry", "run", "uvicorn", "main:app", "--host", "${HOST}", "--port", "${PORT}" ]
