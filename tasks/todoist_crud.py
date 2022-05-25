@@ -15,6 +15,8 @@ def update_task(webhook: TodoistWebhook) -> None:
     items_collection = mongo_collection()
     result = items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()})
     if not result.matched_count:
+        # TODO: Replace with actual logging
+        print("Task with id {webhook.event_data.id} has not been found. Will be created!")
         create_task(webhook=webhook)
         return None
     automations_priority_labelling(webhook.event_data)
