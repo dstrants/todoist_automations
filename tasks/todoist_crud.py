@@ -1,5 +1,6 @@
 import pendulum
 
+from config.constants import TIMEZONE
 from models.todoist import TodoistWebhook
 from tasks.automations_items import automations_priority_labelling
 from utils.mongo import mongo_collection
@@ -29,5 +30,5 @@ def complete_task(webhook: TodoistWebhook) -> None:
         'task_id': webhook.event_data.id,
         'checked': webhook.event_data.checked,
         'uid': webhook.event_data.user_id,
-        'timestamp': pendulum.now()
+        'timestamp': pendulum.now(tz=TIMEZONE)
          })
