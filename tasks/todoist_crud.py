@@ -13,7 +13,10 @@ def create_task(webhook: TodoistWebhook) -> None:
 
 def update_task(webhook: TodoistWebhook) -> None:
     items_collection = mongo_collection()
-    items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()})
+    result = items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()})
+    if not result.matched_count:
+        create_task(webhook=webhook)
+        return None
     automations_priority_labelling(webhook.event_data)
 
 
