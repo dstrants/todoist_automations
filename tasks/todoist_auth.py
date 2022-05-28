@@ -4,16 +4,15 @@ from todoist import TodoistAPI as SyncTodoistAPI
 
 
 from config.constants import TODOIST_CLIENT_ID, TODOIST_CLIENT_SECRET
-from tasks.todoist_user import create_user
 from tasks.todoist_initial_sync import todoist_import_all
 
 
-def todoist_oauth_flow_step_2(code: str, full_sync=False):
+async def todoist_oauth_flow_step_2(code: str, full_sync=False) :
     token = retrieve_user_token(code)
 
-    user_info = retrieve_user_info(token, full_sync=full_sync)
+    user_info = await retrieve_user_info(token, full_sync=full_sync)
 
-    create_user(user_info)
+    return user_info
 
 
 def retrieve_user_token(code: str) -> str:
@@ -31,11 +30,11 @@ def retrieve_user_token(code: str) -> str:
     return data['access_token']
 
 
-def retrieve_user_info(token: str, full_sync=False) -> dict:
+async def retrieve_user_info(token: str, full_sync=False) -> dict:
     api  = SyncTodoistAPI(token)
     api.sync()
 
     if full_sync:
-        run(todoist_import_all(api.state))
+        await todoist_import_all(api.state)
 
     return api.state["user"] | {"token": token}

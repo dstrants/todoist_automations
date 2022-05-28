@@ -1,18 +1,14 @@
-from telethon.sync import TelegramClient
+import random
+import string
 
-from config.constants import TELEGRAM_BOT_ID, TELEGRAM_BOT_TOKEN
-
-
-def get_telegram_client():
-    """
-    Returns a TelegramClient instance.
-    """
-    if not (TELEGRAM_BOT_ID and TELEGRAM_BOT_TOKEN):
-        raise ValueError("TELEGRAM_BOT_ID and TELEGRAM_BOT_TOKEN env variables must be set.")
+from tasks.telergam_crud import create_authentication_code
 
 
-    return TelegramClient(
-        "userbot",
-        api_id=int(TELEGRAM_BOT_ID),
-        api_hash=TELEGRAM_BOT_TOKEN,
-    )
+def generate_telegram_authentication_string() -> str:
+    return "".join(random.choice(string.ascii_letters) for _ in range(48))
+
+
+def start_telegram_authentication_process(todoist_user_id: int) -> str:
+    telegram_authentication_code = generate_telegram_authentication_string()
+    create_authentication_code(telegram_authentication_code, todoist_user_id)
+    return f"https://t.me/doister_stg?start={telegram_authentication_code}"
