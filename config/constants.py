@@ -9,3 +9,6 @@ PRIORITY_LABELS_INPUT = env.get("TODOIST_PRIORITY_LABELS", "high,big,medium,quic
 PRIORITY_LABELS = PRIORITY_LABELS_INPUT.split(",")
 
 TIMEZONE = env.get("TIMEZONE", "Europe/Athens")
+
+TELEGRAM_BOT_ID = env.get("TELEGRAM_BOT_ID", None)
+TELEGRAM_BOT_TOKEN = env.get("TELEGRAM_BOT_TOKEN", None)

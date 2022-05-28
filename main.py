@@ -4,8 +4,10 @@ from fastapi.responses import RedirectResponse
 
 from config.constants import TODOIST_CLIENT_ID, TODOIST_CLIENT_SECRET, TODOIST_STATE_STRING
 from models.todoist import TodoistWebhook
+from models.telegram import TelegramLogin
 from tasks.todoist_auth import todoist_oauth_flow_step_2
 from tasks.todoist_crud import create_task, update_task, delete_task, complete_task
+from tasks.telegram import telegram_send_authorization_code_to_user
 from utils.start_up import startup_ensure_mongo_unique_id_indexes
 from utils.security import todoist_validate_webhook_hmac
 
@@ -53,3 +55,12 @@ async def todoist_redirect_callback(response: Response, background_tasks: Backgr
         return {"message": "Access denied"}
     background_tasks.add_task(todoist_oauth_flow_step_2, code=code, full_sync=True)
     return {"message": "Login successful"}
+
+
+# Telegram Bot Authentication
+@app.post("/telegram/login")
+async def telegram_login_redirect(response: Response, background_tasks: BackgroundTasks, body: TelegramLogin):
+    background_tasks.add_task(telegram_send_authorization_code_to_user, phone=body.phone)
+    return {"message": "Authorization code sent"}
+
+
