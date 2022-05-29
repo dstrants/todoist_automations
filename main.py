@@ -2,7 +2,7 @@ from fastapi import BackgroundTasks, FastAPI, Request, Response, status
 from fastapi.responses import RedirectResponse
 
 
-from config.constants import TODOIST_CLIENT_ID, TODOIST_CLIENT_SECRET, TODOIST_STATE_STRING
+from config.base import config
 from models.todoist import TodoistWebhook
 from tasks.todoist_auth import todoist_oauth_flow_step_2
 from tasks.todoist_crud import create_task, update_task, delete_task, complete_task
@@ -44,16 +44,13 @@ async def health():
 # Todoist Auth Flow
 
 @app.get("/todoist/login")
-async def todoist_login_redirect(response: Response):
-    if not (TODOIST_CLIENT_ID and TODOIST_CLIENT_SECRET and TODOIST_STATE_STRING):
-        response.status_code = status.HTTP_405_METHOD_NOT_ALLOWED
-        return {"message": "No configuration available"}
-    return RedirectResponse(f"https://todoist.com/oauth/authorize?client_id={TODOIST_CLIENT_ID}&scope=data:read_write,data:delete&state={TODOIST_STATE_STRING}")
+async def todoist_login_redirect():
+    return RedirectResponse(f"https://todoist.com/oauth/authorize?client_id={config.todoist.client_id}&scope=data:read_write,data:delete&state={config.todoist.state_string}")
 
 
 @app.get("/todoist/callback")
 async def todoist_redirect_callback(response: Response, background_tasks: BackgroundTasks, code: str = "", state: str = ""):
-    if state != TODOIST_STATE_STRING:
+    if state != config.todoist.state_string:
         response.status_code = status.HTTP_403_FORBIDDEN
         return {"message": "Access denied"}
 
