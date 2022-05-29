@@ -20,6 +20,7 @@ def helper_load_priority_labels() -> dict[str, int]:
 
     return labels
 
+
 def helper_load_user_todoist_token(user_id: int) -> str:
     users_collection = config.mongo.todoist_collection("users")
     user = users_collection.find_one({"id": user_id})
@@ -37,6 +38,7 @@ def check_if_size_label_missing(item: TodoistItem) -> Tuple[set[int], dict[str, 
     item_labels_ids = set(item.labels)
 
     return size_labels_ids.intersection(item_labels_ids), size_labels
+
 
 def automations_priority_labelling(item: TodoistItem) -> None:
     common_labels, size_labels = check_if_size_label_missing(item)

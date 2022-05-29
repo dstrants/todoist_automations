@@ -9,6 +9,7 @@ from services.todoist import users
 def generate_telegram_authentication_string() -> str:
     return "".join(random.choice(string.ascii_letters) for _ in range(48))
 
+
 def create_authentication_code(code: str, todoist_user_id: int):
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     telegram_authentication_code.insert_one({"code": code, "todoist_user_id": todoist_user_id})
@@ -44,7 +45,10 @@ def complete_telegram_verification(webhook_body: dict):
             updated_user = user | {"telegram_chat_id": webhook_body["message"]["chat"]["id"]}
             users.update_user(user=updated_user)
             delete_authentication_code_from_code(code=code)
-            messages.send_telegram_message(message="Your account has been successfully verified", chat_id=webhook_body["message"]["chat"]["id"])
+            messages.send_telegram_message(
+                message="Your account has been successfully verified",
+                chat_id=webhook_body["message"]["chat"]["id"]
+            )
             config.logger.info("User's %s telegram profile has been verified", user["id"])
             return None
         config.logger.warning("Authentication code %s not found", code)

@@ -7,7 +7,11 @@ from services.todoist import automations_items
 
 def create_or_update_task(webhook: TodoistWebhook) -> None:
     items_collection = config.mongo.todoist_collection()
-    items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()}, upsert=True)
+    items_collection.update_one(
+        {"id": webhook.event_data.id},
+        {"$set": webhook.event_data.dict()},
+        upsert=True
+    )
     config.logger.info("Created or updated task %s", webhook.event_data.id)
     automations_items.automations_priority_labelling(webhook.event_data)
 
@@ -28,4 +32,8 @@ def complete_task(webhook: TodoistWebhook) -> None:
         'uid': webhook.event_data.user_id,
         'timestamp': pendulum.now(tz=config.timezone)
     })
-    config.logger.info("%s task %s",("Completed" if webhook.event_data.checked else "Uncompleted"), webhook.event_data.id)
+    config.logger.info(
+        "%s task %s",
+        ("Completed" if webhook.event_data.checked else "Uncompleted"),
+        webhook.event_data.id
+    )

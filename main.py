@@ -14,8 +14,10 @@ app = FastAPI()
 app.on_event("startup")(start_up.startup_ensure_mongo_unique_id_indexes)
 app.on_event("startup")(start_up.startup_ensure_telegram_webhook)
 
+
 @app.post("/todoist/webhooks")
-async def todoist_webhooks(request: Request, response: Response, webhook: TodoistWebhook, background_tasks: BackgroundTasks):
+async def todoist_webhooks(request: Request, response: Response,
+                           webhook: TodoistWebhook, background_tasks: BackgroundTasks):
     if not await todoist_validate_webhook_hmac(request=request):
         config.logger.info("Invalid webhook HMAC")
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -44,7 +46,8 @@ async def todoist_login_redirect():
 
 
 @app.get("/todoist/callback")
-async def todoist_redirect_callback(response: Response, background_tasks: BackgroundTasks, code: str = "", state: str = ""):
+async def todoist_redirect_callback(response: Response, background_tasks: BackgroundTasks,
+                                    code: str = "", state: str = ""):
     if state != config.todoist.state_string:
         config.logger.info("Invalid state string from todoist callback")
         response.status_code = status.HTTP_403_FORBIDDEN

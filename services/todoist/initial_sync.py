@@ -18,7 +18,7 @@ def todoist_instances_to_dict(entries: list) -> list[dict]:
 
 
 async def todoist_import_all(state: dict):
-    imports = [ massive_import(state, kind) for kind in {'projects', 'labels'} ]
+    imports = [massive_import(state, kind) for kind in {'projects', 'labels'}]
     gather(*imports)
 
 

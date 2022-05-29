@@ -5,7 +5,7 @@ from config.base import config
 from services.todoist import initial_sync
 
 
-async def todoist_oauth_flow_step_2(code: str, full_sync=False) :
+async def todoist_oauth_flow_step_2(code: str, full_sync=False):
     token = retrieve_user_token(code)
     user_info = await retrieve_user_info(token, full_sync=full_sync)
 
@@ -27,7 +27,7 @@ def retrieve_user_token(code: str) -> str:
 
 
 async def retrieve_user_info(token: str, full_sync=False) -> dict:
-    api  = SyncTodoistAPI(token)
+    api = SyncTodoistAPI(token)
     api.sync()
 
     if full_sync:
