@@ -1,3 +1,5 @@
+import logging
+
 from pydantic import BaseSettings, BaseModel
 from pymongo.mongo_client import MongoClient
 from pymongo.database import Database
@@ -59,6 +61,10 @@ class Config(BaseSettings):
     class Config:
         env_prefix = "DOISTER_"
         env_nested_delimiter = '__'
+
+    @property
+    def logger(self) -> logging.Logger:
+        return logging.getLogger("doister")
 
 
 config = Config()
