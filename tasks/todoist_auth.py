@@ -7,8 +7,9 @@ from tasks.todoist_initial_sync import todoist_import_all
 
 async def todoist_oauth_flow_step_2(code: str, full_sync=False) :
     token = retrieve_user_token(code)
-
     user_info = await retrieve_user_info(token, full_sync=full_sync)
+
+    config.logger.info("Authenticated todoist user %s", user_info["id"])
 
     return user_info
 
@@ -30,6 +31,7 @@ async def retrieve_user_info(token: str, full_sync=False) -> dict:
     api.sync()
 
     if full_sync:
+        config.logger.info("Full sync requested")
         await todoist_import_all(api.state)
 
     return api.state["user"] | {"token": token}

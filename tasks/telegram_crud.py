@@ -4,6 +4,7 @@ from config.base import config
 def create_authentication_code(code: str, todoist_user_id: int):
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     telegram_authentication_code.insert_one({"code": code, "todoist_user_id": todoist_user_id})
+    config.logger.info("Created telegram authentication code for user %s", todoist_user_id)
 
 
 def get_authentication_code_from_code(code: str) -> dict:
@@ -18,3 +19,4 @@ def get_authentication_code_from_user_id(todoist_user_id: int) -> dict:
 def delete_authentication_code_from_code(code: str) -> None:
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     telegram_authentication_code.delete_one({"code": code})
+    config.logger.info("Deleted telegram authentication code %s", code)

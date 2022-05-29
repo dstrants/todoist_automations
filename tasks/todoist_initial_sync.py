@@ -27,5 +27,4 @@ async def massive_import(state, kind: str):
     collection = config.mongo.todoist_collection(kind)
     for entry in data:
         collection.update_one({"id": entry["id"]}, {"$set": entry}, upsert=True)
-
-
+    config.logger.info("Imported %s %s", len(data), kind)
