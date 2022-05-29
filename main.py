@@ -5,7 +5,7 @@ from fastapi.responses import RedirectResponse
 from config.base import config
 from models.todoist import TodoistWebhook
 from tasks.todoist_auth import todoist_oauth_flow_step_2
-from tasks.todoist_crud import create_task, update_task, delete_task, complete_task
+from tasks.todoist_crud import create_or_update_task, delete_task, complete_task
 
 from tasks import telegram
 from utils.start_up import startup_ensure_mongo_unique_id_indexes, startup_ensure_telegram_webhook
@@ -25,10 +25,8 @@ async def todoist_webhooks(request: Request, response: Response, webhook: Todois
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"message": "Request does not have the right format"}
     match webhook.event_name:
-        case "item:added":
-            background_tasks.add_task(create_task, webhook=webhook)
-        case "item:updated":
-            background_tasks.add_task(update_task, webhook=webhook)
+        case "item:added" | "item:updated":
+            background_tasks.add_task(create_or_update_task, webhook=webhook)
         case "item:deleted":
             background_tasks.add_task(delete_task, webhook=webhook)
         case "item:completed" | "item:uncompleted":
