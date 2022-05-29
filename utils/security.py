@@ -7,7 +7,7 @@ from config.base import config
 
 async def todoist_validate_webhook_hmac(request: Request) -> bool:
     if not "X-Todoist-Hmac-SHA256" in request.headers:
-        print("HMAC header not present on the request")
+        config.logger.warning("Missing X-Todoist-Hmac-SHA256 header")
         return False
 
     body = await request.body()
@@ -15,7 +15,7 @@ async def todoist_validate_webhook_hmac(request: Request) -> bool:
     hmac_digest = base64.b64encode(calculated_hmac.digest()).decode()
 
     if hmac_digest != (security_header := request.headers["X-Todoist-Hmac-SHA256"]):
-        print(f"Digests do not much\n Calculated: {hmac_digest}\n Provided: {security_header}")
+        config.logger.warning("Invalid X-Todoist-Hmac-SHA256 header")
         return False
 
     return True
