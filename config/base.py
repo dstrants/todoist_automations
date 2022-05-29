@@ -36,10 +36,10 @@ class MongoConfig(BaseModel):
     def telegram_database(self) -> Database:
         return self.client[self.telegram_database_name]
 
-    def todoist_collection(self, collection: str) -> Collection:
+    def todoist_collection(self, collection: str = "items") -> Collection:
         return self.todoist_database[collection]
 
-    def telegram_collection(self, collection: str) -> Collection:
+    def telegram_collection(self, collection: str = "authentication_codes") -> Collection:
         return self.telegram_database[collection]
 
 

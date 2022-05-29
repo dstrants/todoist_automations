@@ -3,10 +3,9 @@ from todoist_api_python.api import TodoistAPI
 
 from config.base import config
 from models.todoist import TodoistItem
-from utils.mongo import mongo_collection
 
 def helper_load_priority_labels() -> dict[str, int]:
-    labels_collection = mongo_collection("labels")
+    labels_collection = config.mongo.todoist_collection("labels")
     labels = {}
 
     for priority_label_name in config.todoist.priority_labels_set:
@@ -19,7 +18,7 @@ def helper_load_priority_labels() -> dict[str, int]:
     return labels
 
 def helper_load_user_todoist_token(user_id: int) -> str:
-    users_collection = mongo_collection("users")
+    users_collection = config.mongo.todoist_collection("users")
     user = users_collection.find_one({"id": user_id})
 
     if not user:
