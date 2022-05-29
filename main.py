@@ -42,7 +42,7 @@ async def health():
 
 @app.get("/todoist/login")
 async def todoist_login_redirect():
-    return RedirectResponse(f"https://todoist.com/oauth/authorize?client_id={config.todoist.client_id}&scope=data:read_write,data:delete&state={config.todoist.state_string}")
+    return RedirectResponse(config.todoist.oauth_full_url)
 
 
 @app.get("/todoist/callback")
