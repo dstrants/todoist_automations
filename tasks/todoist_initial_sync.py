@@ -25,5 +25,7 @@ async def todoist_import_all(state: dict):
 async def massive_import(state, kind: str):
     data = todoist_instances_to_dict(state[kind])
     collection = config.mongo.todoist_collection(kind)
-    collection.insert_many(data)
+    for entry in data:
+        collection.update_one({"id": entry["id"]}, {"$set": entry}, upsert=True)
+
 
