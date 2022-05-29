@@ -1,15 +1,12 @@
-import logging
 from typing import Optional
 
 from pydantic import BaseModel
 
-
-logger = logging.getLogger(__name__)
 COLORS = [
     "#b8256f", "#db4035", "#ff9933", "#fad000", "#afb83b", "#7ecc49", "#299438", "#6accbc",
     "#158fad", "#14aaf5", "#96c3eb", "#4073ff", "#884dff", "#af38eb", "#eb96eb", "#e05194",
     "#ff8d85", "#808080", "#b8b8b8", "#ccac93"
-    ]
+]
 
 
 class DueDate(BaseModel):
