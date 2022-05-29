@@ -1,6 +1,7 @@
 import random
 import string
 
+from config.constants import TELEGRAM_BOT_NAME as bot_name
 from tasks import telegram_crud
 
 
@@ -14,4 +15,4 @@ def start_telegram_authentication_process(todoist_user_id: int) -> str:
         telegram_crud.create_authentication_code(telegram_authentication_code, todoist_user_id)
     else:
         telegram_authentication_code = telegram_authentication_code_dict["code"]
-    return f"https://t.me/doister_stg?start={telegram_authentication_code}"
+    return f"https://t.me/{bot_name}?start={telegram_authentication_code}"
