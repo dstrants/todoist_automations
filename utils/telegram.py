@@ -1,7 +1,7 @@
 import random
 import string
 
-from tasks.telergam_crud import create_authentication_code
+from tasks import telegram_crud
 
 
 def generate_telegram_authentication_string() -> str:
@@ -9,6 +9,9 @@ def generate_telegram_authentication_string() -> str:
 
 
 def start_telegram_authentication_process(todoist_user_id: int) -> str:
-    telegram_authentication_code = generate_telegram_authentication_string()
-    create_authentication_code(telegram_authentication_code, todoist_user_id)
+    if not (telegram_authentication_code_dict := telegram_crud.get_authentication_code_from_user_id(todoist_user_id)):
+        telegram_authentication_code = generate_telegram_authentication_string()
+        telegram_crud.create_authentication_code(telegram_authentication_code, todoist_user_id)
+    else:
+        telegram_authentication_code = telegram_authentication_code_dict["code"]
     return f"https://t.me/doister_stg?start={telegram_authentication_code}"

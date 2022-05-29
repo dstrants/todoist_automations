@@ -6,7 +6,9 @@ from config.constants import TODOIST_CLIENT_ID, TODOIST_CLIENT_SECRET, TODOIST_S
 from models.todoist import TodoistWebhook
 from tasks.todoist_auth import todoist_oauth_flow_step_2
 from tasks.todoist_crud import create_task, update_task, delete_task, complete_task
-from utils.start_up import startup_ensure_mongo_unique_id_indexes
+
+from tasks import telegram
+from utils.start_up import startup_ensure_mongo_unique_id_indexes, startup_ensure_telegram_webhook
 from utils.security import todoist_validate_webhook_hmac
 from utils.telegram import start_telegram_authentication_process
 from tasks.todoist_user import create_user
@@ -15,6 +17,7 @@ from tasks.todoist_user import create_user
 app = FastAPI()
 
 app.on_event("startup")(startup_ensure_mongo_unique_id_indexes)
+app.on_event("startup")(startup_ensure_telegram_webhook)
 
 @app.post("/todoist/webhooks")
 async def todoist_webhooks(request: Request, response: Response, webhook: TodoistWebhook, background_tasks: BackgroundTasks):
@@ -64,13 +67,12 @@ async def todoist_redirect_callback(response: Response, background_tasks: Backgr
 
 
 # Telegram Flow
-# NOTE: WIP unsecure implementation at the moment
-@app.post("/telegram/webhooks")
-async def telegram_webhook(request: Request, response: Response, background_tasks: BackgroundTasks):
+@app.post("/telegram/webhook")
+async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
     data = await request.json()
+    text = data["message"]["text"]
 
-    if data["message"]["text"].startswith("/start"):
-        pass
-        #background_tasks.add_task(create_task, data= )
+    if text.startswith("/start"):
+        background_tasks.add_task(telegram.complete_telegram_verification, webhook_body=data)
 
     return {"message": "Webhook received"}

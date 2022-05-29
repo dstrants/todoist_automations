@@ -14,3 +14,8 @@ def update_user(user: dict):
 def find_user_by_email(todoist_user_email: str) -> dict | None:
     users_collection = mongo_collection("users")
     return users_collection.find_one({"email": todoist_user_email})
+
+
+def find_user_by_query(query: dict) -> dict | None:
+    users_collection = mongo_collection("users")
+    return users_collection.find_one(query)
