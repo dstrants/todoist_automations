@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-LABEL version="0.2.0-alpha.0"
+LABEL version="0.2.0-alpha.1"
 
 LABEL maintainer="Dimitris Strantsalis <dstrants@gmail.com>"
 
