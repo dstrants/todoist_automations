@@ -10,7 +10,7 @@ class TodoistConfig(BaseModel):
     client_id: str
     client_secret: str
     state_string: str
-    priority_labels: str = "high,big,medium,quick"
+    priority_labels: str = "huge,big,medium,quick"
     oauth_base_url: str = "https://todoist.com/oauth/authorize"
     oauth_scope: str = "data:read_write,data:delete"
 
@@ -65,12 +65,15 @@ class Config(BaseSettings):
     timezone: str = "Europe/Athens"
     host: str = "http://localhost:8000"
 
+    log_level: str = "INFO"
+
     class Config:
         env_prefix = "DOISTER_"
         env_nested_delimiter = '__'
 
     @property
     def logger(self) -> logging.Logger:
+        logging.basicConfig(level=self.log_level)
         return logging.getLogger("doister")
 
 
