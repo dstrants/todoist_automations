@@ -1,13 +1,18 @@
-from pydantic import BaseSettings, BaseModel
-from pymongo.mongo_client import MongoClient
-from pymongo.database import Database
+import logging
+
+from pydantic import BaseModel, BaseSettings
 from pymongo.collection import Collection
+from pymongo.database import Database
+from pymongo.mongo_client import MongoClient
+
 
 class TodoistConfig(BaseModel):
     client_id: str
     client_secret: str
     state_string: str
-    priority_labels: str = "high,big,medium,quick"
+    priority_labels: str = "huge,big,medium,quick"
+    oauth_base_url: str = "https://todoist.com/oauth/authorize"
+    oauth_scope: str = "data:read_write,data:delete"
 
     @property
     def priority_labels_set(self) -> set[str]:
@@ -16,6 +21,10 @@ class TodoistConfig(BaseModel):
     @property
     def client_secret_encoded(self) -> bytes:
         return self.client_secret.encode()
+
+    @property
+    def oauth_full_url(self) -> str:
+        return f"{self.oauth_base_url}?client_id={self.client_id}&scope={self.oauth_scope}&state={self.state_string}"
 
 
 class MongoConfig(BaseModel):
@@ -56,9 +65,16 @@ class Config(BaseSettings):
     timezone: str = "Europe/Athens"
     host: str = "http://localhost:8000"
 
+    log_level: str = "INFO"
+
     class Config:
         env_prefix = "DOISTER_"
         env_nested_delimiter = '__'
+
+    @property
+    def logger(self) -> logging.Logger:
+        logging.basicConfig(level=self.log_level)
+        return logging.getLogger("doister")
 
 
 config = Config()

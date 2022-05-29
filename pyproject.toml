@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "todoist_automations"
-version = "0.2.0-alpha.1"
+version = "0.2.0"
 description = ""
 authors = ["Dimitris <dimitris.strantsalis@workable.com>"]
 
@@ -14,10 +14,10 @@ pendulum = "^2.1.2"
 python-telegram-bot = "^13.12"
 
 [tool.poetry.dev-dependencies]
-flake9 = "^3.8.3"
 isort = "^5.10.1"
 ipython = "^8.3.0"
 pytest = "^7.1.2"
+pylama = "^8.3.8"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

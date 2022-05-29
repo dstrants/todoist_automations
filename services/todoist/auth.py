@@ -2,13 +2,14 @@ import requests
 from todoist import TodoistAPI as SyncTodoistAPI
 
 from config.base import config
-from tasks.todoist_initial_sync import todoist_import_all
+from services.todoist import initial_sync
 
 
-async def todoist_oauth_flow_step_2(code: str, full_sync=False) :
+async def todoist_oauth_flow_step_2(code: str, full_sync=False):
     token = retrieve_user_token(code)
-
     user_info = await retrieve_user_info(token, full_sync=full_sync)
+
+    config.logger.info("Authenticated todoist user %s", user_info["id"])
 
     return user_info
 
@@ -26,10 +27,11 @@ def retrieve_user_token(code: str) -> str:
 
 
 async def retrieve_user_info(token: str, full_sync=False) -> dict:
-    api  = SyncTodoistAPI(token)
+    api = SyncTodoistAPI(token)
     api.sync()
 
     if full_sync:
-        await todoist_import_all(api.state)
+        config.logger.info("Full sync requested")
+        await initial_sync.todoist_import_all(api.state)
 
     return api.state["user"] | {"token": token}

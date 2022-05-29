@@ -18,7 +18,7 @@ def todoist_instances_to_dict(entries: list) -> list[dict]:
 
 
 async def todoist_import_all(state: dict):
-    imports = [ massive_import(state, kind) for kind in {'projects', 'labels'} ]
+    imports = [massive_import(state, kind) for kind in {'projects', 'labels'}]
     gather(*imports)
 
 
@@ -27,5 +27,4 @@ async def massive_import(state, kind: str):
     collection = config.mongo.todoist_collection(kind)
     for entry in data:
         collection.update_one({"id": entry["id"]}, {"$set": entry}, upsert=True)
-
-
+    config.logger.info("Imported %s %s", len(data), kind)
