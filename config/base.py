@@ -1,5 +1,7 @@
 from pydantic import BaseSettings, BaseModel
-
+from pymongo.mongo_client import MongoClient
+from pymongo.database import Database
+from pymongo.collection import Collection
 
 class TodoistConfig(BaseModel):
     client_id: str
@@ -18,6 +20,28 @@ class TodoistConfig(BaseModel):
 
 class MongoConfig(BaseModel):
     server: str
+    todoist_database_name: str = "todoist"
+    # NOTE: This is a placeholder for the future.
+    telegram_database_name: str = "telegram"
+
+    @property
+    def client(self) -> MongoClient:
+        return MongoClient(self.server)
+
+    @property
+    def todoist_database(self) -> Database:
+        return self.client[self.todoist_database_name]
+
+    @property
+    def telegram_database(self) -> Database:
+        return self.client[self.telegram_database_name]
+
+    def todoist_collection(self, collection: str) -> Collection:
+        return self.todoist_database[collection]
+
+    def telegram_collection(self, collection: str) -> Collection:
+        return self.telegram_database[collection]
+
 
 class TelegramConfig(BaseModel):
     bot_token: str
