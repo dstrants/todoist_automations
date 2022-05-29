@@ -1,4 +1,5 @@
 from typing import Tuple
+
 from todoist_api_python.api import TodoistAPI
 
 from config.base import config

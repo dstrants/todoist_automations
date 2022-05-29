@@ -1,9 +1,10 @@
 import logging
 
-from pydantic import BaseSettings, BaseModel
-from pymongo.mongo_client import MongoClient
-from pymongo.database import Database
+from pydantic import BaseModel, BaseSettings
 from pymongo.collection import Collection
+from pymongo.database import Database
+from pymongo.mongo_client import MongoClient
+
 
 class TodoistConfig(BaseModel):
     client_id: str

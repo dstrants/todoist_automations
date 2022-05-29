@@ -3,6 +3,7 @@ from telegram import Bot
 
 from config.base import config
 
+
 async def startup_ensure_mongo_unique_id_indexes():
     for collection_name in {'items', 'projects', 'labels'}:
         collection = config.mongo.todoist_collection(collection_name)

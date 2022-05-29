@@ -2,8 +2,8 @@ import random
 import string
 
 from config.base import config
-from services.todoist import users
 from services.telegram import messages
+from services.todoist import users
 
 
 def generate_telegram_authentication_string() -> str:

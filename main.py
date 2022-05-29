@@ -1,14 +1,14 @@
 from fastapi import BackgroundTasks, FastAPI, Request, Response, status
 from fastapi.responses import RedirectResponse
 
-
 from config.base import config
 from models.todoist import TodoistWebhook
 from services.telegram import auth as telegram_auth
-from services.todoist import auth as todoist_auth, items as todoist_items, users as todoist_users
+from services.todoist import auth as todoist_auth
+from services.todoist import items as todoist_items
+from services.todoist import users as todoist_users
 from utils import start_up
 from utils.security import todoist_validate_webhook_hmac
-
 
 app = FastAPI()
 app.on_event("startup")(start_up.startup_ensure_mongo_unique_id_indexes)

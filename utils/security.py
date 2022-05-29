@@ -1,9 +1,10 @@
-import hmac
 import base64
+import hmac
 
 from fastapi import Request
 
 from config.base import config
+
 
 async def todoist_validate_webhook_hmac(request: Request) -> bool:
     if not "X-Todoist-Hmac-SHA256" in request.headers:
