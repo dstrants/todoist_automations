@@ -2,14 +2,14 @@ import pendulum
 
 from config.base import config
 from models.todoist import TodoistWebhook
-from tasks.automations_items import automations_priority_labelling
+from services.todoist import automations_items
 
 
 def create_or_update_task(webhook: TodoistWebhook) -> None:
     items_collection = config.mongo.todoist_collection()
     items_collection.update_one({"id": webhook.event_data.id}, {"$set": webhook.event_data.dict()}, upsert=True)
     config.logger.info("Created or updated task %s", webhook.event_data.id)
-    automations_priority_labelling(webhook.event_data)
+    automations_items.automations_priority_labelling(webhook.event_data)
 
 
 def delete_task(webhook: TodoistWebhook) -> None:
