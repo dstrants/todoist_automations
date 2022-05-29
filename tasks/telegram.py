@@ -1,6 +1,6 @@
 from telegram import Bot, Message
 
-from config.constants import TELEGRAM_BOT_TOKEN as token
+from config.base import config
 
 from tasks import todoist_user as users
 from tasks import telegram_crud
@@ -21,8 +21,5 @@ def complete_telegram_verification(webhook_body: dict):
 
 
 def send_telegram_message(message: str, chat_id: int) -> Message:
-    if not token:
-        raise ValueError("Telegram bot token is not set")
-
-    bot = Bot(token=token)
+    bot = Bot(token=config.telegram.bot_token)
     return bot.send_message(chat_id=chat_id, text=message)

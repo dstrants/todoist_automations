@@ -8,7 +8,7 @@ MONGO_CLIENT = env.get("MONGO_CLIENT", None)
 PRIORITY_LABELS_INPUT = env.get("TODOIST_PRIORITY_LABELS", "high,big,medium,quick")
 PRIORITY_LABELS = PRIORITY_LABELS_INPUT.split(",")
 
-TIMEZONE = env.get("TIMEZONE", "Europe/Athens")
+TIMEZONE = env.get("APPLICATION_TIMEZONE", "Europe/Athens")
 
 TELEGRAM_BOT_TOKEN = env.get("TELEGRAM_BOT_TOKEN", None)
 TELEGRAM_BOT_NAME  = env.get("TELEGRAM_BOT_NAME", None)

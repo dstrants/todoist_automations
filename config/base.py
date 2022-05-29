@@ -11,9 +11,13 @@ class TodoistConfig(BaseModel):
     def priority_labels_set(self) -> set[str]:
         return set(self.priority_labels.split(","))
 
+    @property
+    def client_secret_encoded(self) -> bytes:
+        return self.client_secret.encode()
+
 
 class MongoConfig(BaseModel):
-    client: str
+    server: str
 
 class TelegramConfig(BaseModel):
     bot_token: str
