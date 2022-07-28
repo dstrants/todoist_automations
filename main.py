@@ -1,3 +1,5 @@
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from fastapi import BackgroundTasks, FastAPI, Request, Response, status
 from fastapi.responses import RedirectResponse
 
@@ -10,9 +12,21 @@ from services.todoist import users as todoist_users
 from utils import start_up
 from utils.security import todoist_validate_webhook_hmac
 
+
+sentry_sdk.init(
+    dsn=config.sentry.dsn,
+    environment=config.env,
+    traces_sample_rate=config.sentry.traces_sample_rate,
+)
+
 app = FastAPI()
 app.on_event("startup")(start_up.startup_ensure_mongo_unique_id_indexes)
 app.on_event("startup")(start_up.startup_ensure_telegram_webhook)
+
+try:
+    app.add_middleware(SentryAsgiMiddleware)
+except Exception as e:
+    config.logger.warning(f"Failed to add SentryAsgiMiddleware: {e}")
 
 
 @app.post("/todoist/webhooks")

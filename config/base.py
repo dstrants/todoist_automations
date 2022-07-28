@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from pydantic import BaseModel, BaseSettings
 from pymongo.collection import Collection
@@ -56,16 +57,22 @@ class TelegramConfig(BaseModel):
     bot_token: str
     bot_name: str
 
+class SentryConfig(BaseModel):
+    dsn: Optional[str]
+    traces_sample_rate: float = 1.0
+
 
 class Config(BaseSettings):
     todoist: TodoistConfig
     mongo: MongoConfig
     telegram: TelegramConfig
+    sentry: SentryConfig
 
     timezone: str = "Europe/Athens"
     host: str = "http://localhost:8000"
 
     log_level: str = "INFO"
+    env: str = "dev"
 
     class Config:
         env_prefix = "DOISTER_"
