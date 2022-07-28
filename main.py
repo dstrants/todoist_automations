@@ -1,7 +1,7 @@
 import sentry_sdk
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from fastapi import BackgroundTasks, FastAPI, Request, Response, status
 from fastapi.responses import RedirectResponse
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from config.base import config
 from models.todoist import TodoistWebhook
@@ -11,7 +11,6 @@ from services.todoist import items as todoist_items
 from services.todoist import users as todoist_users
 from utils import start_up
 from utils.security import todoist_validate_webhook_hmac
-
 
 sentry_sdk.init(
     dsn=config.sentry.dsn,

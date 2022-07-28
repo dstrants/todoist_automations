@@ -57,6 +57,7 @@ class TelegramConfig(BaseModel):
     bot_token: str
     bot_name: str
 
+
 class SentryConfig(BaseModel):
     dsn: Optional[str]
     traces_sample_rate: float = 1.0
