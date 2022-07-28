@@ -1,8 +1,7 @@
 import string
 import random
-import pytest
+
 from fastapi.testclient import TestClient
-from requests.exceptions import HTTPError
 
 from main import app
 from config.base import config
