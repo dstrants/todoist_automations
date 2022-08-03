@@ -59,7 +59,7 @@ class TelegramConfig(BaseModel):
 
 
 class SentryConfig(BaseModel):
-    dsn: Optional[str]
+    dsn: Optional[str] =  None
     traces_sample_rate: float = 1.0
 
 

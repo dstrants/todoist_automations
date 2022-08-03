@@ -13,11 +13,13 @@ from services.todoist import users as todoist_users
 from utils import start_up
 from utils.security import todoist_validate_webhook_hmac
 
-sentry_sdk.init(
-    dsn=config.sentry.dsn,
-    environment=config.env,
-    traces_sample_rate=config.sentry.traces_sample_rate,
-)
+
+if config.sentry.dsn:
+    sentry_sdk.init(
+        dsn=config.sentry.dsn,
+        environment=config.env,
+        traces_sample_rate=config.sentry.traces_sample_rate,
+    )
 
 app = FastAPI()
 app.on_event("startup")(start_up.startup_ensure_mongo_unique_id_indexes)
