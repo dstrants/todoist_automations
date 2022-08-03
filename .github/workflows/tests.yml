@@ -30,7 +30,7 @@ jobs:
       - name: Linting
         run: pytest --pylama
         env:
-          DOISTER_ENV: ${{ secret.DOISTER_ENV }}
+          DOISTER_ENV: ${{ secrets.DOISTER_ENV }}
           DOISTER_HOST: ${{ secrets.DOISTER_HOST }}
           DOISTER_MONGO__SERVER: ${{ secrets.DOISTER_MONGO__SERVER }}
           DOISTER_SENTRY__DSN: ${{ secrets.DOISTER_SENTRY__DSN }}
