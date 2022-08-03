@@ -29,6 +29,14 @@ jobs:
 
       - name: Linting
         run: pytest --pylama
+        env:
+          DOISTER_ENV: ${{ secret.DOISTER_ENV }}
+          DOISTER_HOST: ${{ secrets.DOISTER_HOST }}
+          DOISTER_MONGO__SERVER: ${{ secrets.DOISTER_MONGO__SERVER }}
+          DOISTER_SENTRY__DSN: ${{ secrets.DOISTER_SENTRY__DSN }}
+          DOISTER_TELEGRAM__BOT_NAME: ${{ secrets.DOISTER_TELEGRAM__BOT_NAME }}
+          DOISTER_TELEGRAM__BOT_TOKEN: ${{ secrets.DOISTER_TELEGRAM__BOT_TOKEN }}
+          DOISTER_TODOIST__CLIENT_ID: ${{ secrets.DOISTER_TODOIST__CLIENT_ID }}
+          DOISTER_TODOIST__CLIENT_SECRET: ${{ secrets.DOISTER_TODOIST__CLIENT_SECRET }}
+          DOISTER_TODOIST__STATE_STRING: ${{ secrets.DOISTER_TODOIST__STATE_STRING }}
 
-      - name: Run tests
-        run: pytest
