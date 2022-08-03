@@ -26,9 +26,9 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-root
-      
+
       - name: Linting
-        run: pylama
-        
+        run: pytest --pylama
+
       - name: Run tests
         run: pytest
