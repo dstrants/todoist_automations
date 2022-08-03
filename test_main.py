@@ -1,9 +1,10 @@
 import string
 import random
+
 from fastapi.testclient import TestClient
 
 from main import app
-from config.constants import TODOIST_STATE_STRING
+from config.base import config
 
 client = TestClient(app)
 
@@ -35,7 +36,7 @@ def test_todoist_login_callback_invalid_state():
 def test_todoist_login_callback_valid_state():
     letters = string.ascii_lowercase
     code = ( ''.join(random.choice(letters) for _ in range(10)) )
-    resp = client.get(f"/todoist/callback?code={code}&state={TODOIST_STATE_STRING}")
+    resp = client.get(f"/todoist/callback?code={code}&state={config.todoist.state_string}")
 
-    assert resp.status_code == 200
-    assert resp.json() == {"message": "Login successful"}
+    assert resp.status_code == 400
+    assert resp.json() == {"message": "Invalid code"}
