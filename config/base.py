@@ -59,7 +59,7 @@ class TelegramConfig(BaseModel):
 
 
 class SentryConfig(BaseModel):
-    dsn: Optional[str] =  None
+    dsn: Optional[str] = None
     traces_sample_rate: float = 1.0
 
 
@@ -67,7 +67,7 @@ class Config(BaseSettings):
     todoist: TodoistConfig
     mongo: MongoConfig
     telegram: TelegramConfig
-    sentry: SentryConfig
+    sentry: SentryConfig = SentryConfig()
 
     timezone: str = "Europe/Athens"
     host: str = "http://localhost:8000"
