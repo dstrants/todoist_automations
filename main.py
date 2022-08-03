@@ -25,7 +25,7 @@ app.on_event("startup")(start_up.startup_ensure_telegram_webhook)
 
 try:
     app.add_middleware(SentryAsgiMiddleware)
-except Exception as e: # skipcq: PYL-W0703 - Every import error should be handled
+except Exception as e:  # skipcq: PYL-W0703 - Every import error should be handled
     config.logger.warning(f"Failed to add SentryAsgiMiddleware: {e}")
 
 
