@@ -10,7 +10,7 @@ def test_form_repo_dict() -> None:
     repo_dict = form_repo_dict(repo)
 
     assert isinstance(repo_dict, dict)
-    assert repo_dict["Name"] == EXISTING_REPO == repo.name
+    assert repo_dict["Name"] == repo.name
 
     assert {
         "Name": repo.name,
