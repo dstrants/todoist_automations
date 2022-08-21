@@ -32,6 +32,8 @@ jobs:
         env:
           DOISTER_ENV: ${{ secrets.DOISTER_ENV }}
           DOISTER_HOST: ${{ secrets.DOISTER_HOST }}
+          DOISTER_AIRTABLE__TOKEN: ${{ secrets.DOISTER_AIRTABLE__TOKEN }}
+          DOISTER_AIRTABLE__BASE_ID: ${{ secrets.DOISTER_AIRTABLE__BASE_ID }}
           DOISTER_MONGO__SERVER: ${{ secrets.DOISTER_MONGO__SERVER }}
           DOISTER_TELEGRAM__BOT_NAME: ${{ secrets.DOISTER_TELEGRAM__BOT_NAME }}
           DOISTER_TELEGRAM__BOT_TOKEN: ${{ secrets.DOISTER_TELEGRAM__BOT_TOKEN }}
