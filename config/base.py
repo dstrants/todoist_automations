@@ -91,6 +91,8 @@ class Config(BaseSettings):
     telegram: TelegramConfig
     sentry: SentryConfig = SentryConfig()
 
+    api_key: str
+
     timezone: str = "Europe/Athens"
     host: str = "http://localhost:8000"
 
