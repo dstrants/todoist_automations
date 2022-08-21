@@ -30,13 +30,14 @@ class TodoistConfig(BaseModel):
 
 class MongoConfig(BaseModel):
     server: str
+    timeout: int = 30_000
     todoist_database_name: str = "todoist"
     # NOTE: This is a placeholder for the future.
     telegram_database_name: str = "telegram"
 
     @property
     def client(self) -> MongoClient:
-        return MongoClient(self.server)
+        return MongoClient(self.server, serverSelectionTimeoutMS=self.timeout)
 
     @property
     def todoist_database(self) -> Database:
