@@ -5,6 +5,7 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from config.base import config
 from routes import todoist as todoist_routes
 from routes import telegram as telegram_routes
+from routes import tools as tools_routes
 from utils import start_up
 
 
@@ -18,6 +19,7 @@ if config.sentry.dsn:
 app = FastAPI()
 app.include_router(todoist_routes.router)
 app.include_router(telegram_routes.router)
+app.include_router(tools_routes.router)
 app.on_event("startup")(start_up.startup_ensure_mongo_unique_id_indexes)
 app.on_event("startup")(start_up.startup_ensure_telegram_webhook)
 
