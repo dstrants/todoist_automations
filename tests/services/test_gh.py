@@ -6,6 +6,7 @@ from services.gh.repos import get_repo
 
 EXISTING_REPO = "tiangolo/fastapi"
 
+
 def test_get_repo_existing_repo() -> None:
     repo = get_repo(EXISTING_REPO)
 
