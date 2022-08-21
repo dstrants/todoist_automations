@@ -5,9 +5,6 @@ from services.gh.repos import get_repo
 from services.airtable.records import create_record
 
 
-# TODO: Cache repos to the mongo db
-
-
 def form_repo_dict(repo: Repository) -> dict:
     return {
         "Name": repo.name,
