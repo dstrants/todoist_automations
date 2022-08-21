@@ -9,8 +9,10 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+
 class NewRepo(BaseModel):
     full_name: str
+
 
 @router.post("/new")
 async def tools_webhook(repo: NewRepo, background_tasks: BackgroundTasks):

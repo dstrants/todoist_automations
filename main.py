@@ -29,8 +29,6 @@ except Exception as e:  # skipcq: PYL-W0703 - Every import error should be handl
     config.logger.warning(f"Failed to add SentryAsgiMiddleware: {e}")
 
 
-app.include_router
-
 @app.get("/health")
 async def health():
     return {"message": "Hello World"}

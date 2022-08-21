@@ -4,7 +4,9 @@ from config.base import config
 from services.gh.repos import get_repo
 from services.airtable.records import create_record
 
+
 # TODO: Cache repos to the mongo db
+
 
 def form_repo_dict(repo: Repository) -> dict:
     return {
@@ -16,6 +18,7 @@ def form_repo_dict(repo: Repository) -> dict:
         "Language": repo.language
 
     }
+
 
 def create_record_from_repo(repo_name: str) -> None:
     repo = get_repo(repo_name)
