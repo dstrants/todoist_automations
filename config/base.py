@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 
+from pyairtable.api.table import Table
 from pydantic import BaseModel, BaseSettings
 from pymongo.collection import Collection
 from pymongo.database import Database
@@ -30,13 +31,15 @@ class TodoistConfig(BaseModel):
 
 class MongoConfig(BaseModel):
     server: str
+    timeout: int = 30_000
     todoist_database_name: str = "todoist"
     # NOTE: This is a placeholder for the future.
     telegram_database_name: str = "telegram"
+    tools_database_name: str = "tools"
 
     @property
     def client(self) -> MongoClient:
-        return MongoClient(self.server)
+        return MongoClient(self.server, serverSelectionTimeoutMS=self.timeout)
 
     @property
     def todoist_database(self) -> Database:
@@ -46,11 +49,18 @@ class MongoConfig(BaseModel):
     def telegram_database(self) -> Database:
         return self.client[self.telegram_database_name]
 
+    @property
+    def tools_database(self) -> Database:
+        return self.client[self.tools_database_name]
+
     def todoist_collection(self, collection: str = "items") -> Collection:
         return self.todoist_database[collection]
 
     def telegram_collection(self, collection: str = "authentication_codes") -> Collection:
         return self.telegram_database[collection]
+
+    def tools_collection(self, collection: str = "tools") -> Collection:
+        return self.tools_database[collection]
 
 
 class TelegramConfig(BaseModel):
@@ -63,7 +73,19 @@ class SentryConfig(BaseModel):
     traces_sample_rate: float = 1.0
 
 
+class AirtableConfig(BaseModel):
+    token: str
+    base_id: str
+    cache: bool = True
+    table_name: str = "Tools"
+
+    @property
+    def base(self) -> Table:
+        return Table(self.token, self.base_id, self.table_name)
+
+
 class Config(BaseSettings):
+    airtable: AirtableConfig
     todoist: TodoistConfig
     mongo: MongoConfig
     telegram: TelegramConfig
