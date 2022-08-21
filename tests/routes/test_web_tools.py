@@ -11,6 +11,7 @@ def test_missing_auth_header() -> None:
     assert resp.status_code == 403
     assert resp.json() == {"detail": "Not authenticated"}
 
+
 def test_wrong_auth_header() -> None:
     resp = client.post(
         "/tools/new",
