@@ -35,6 +35,7 @@ class MongoConfig(BaseModel):
     todoist_database_name: str = "todoist"
     # NOTE: This is a placeholder for the future.
     telegram_database_name: str = "telegram"
+    tools_database_name: str = "tools"
 
     @property
     def client(self) -> MongoClient:
@@ -48,11 +49,18 @@ class MongoConfig(BaseModel):
     def telegram_database(self) -> Database:
         return self.client[self.telegram_database_name]
 
+    @property
+    def tools_database(self) -> Database:
+        return self.client[self.tools_database_name]
+
     def todoist_collection(self, collection: str = "items") -> Collection:
         return self.todoist_database[collection]
 
     def telegram_collection(self, collection: str = "authentication_codes") -> Collection:
         return self.telegram_database[collection]
+
+    def tools_collection(self, collection: str = "tools") -> Collection:
+        return self.tools_database[collection]
 
 
 class TelegramConfig(BaseModel):
