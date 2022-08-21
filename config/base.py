@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 
+from pyairtable.api.table import Table
 from pydantic import BaseModel, BaseSettings
 from pymongo.collection import Collection
 from pymongo.database import Database
@@ -64,7 +65,18 @@ class SentryConfig(BaseModel):
     traces_sample_rate: float = 1.0
 
 
+class AirtableConfig(BaseModel):
+    token: str
+    base_id: str
+    table_name: str = "Tools"
+
+    @property
+    def base(self) -> Table:
+        return Table(self.token, self.base_id, self.table_name)
+
+
 class Config(BaseSettings):
+    airtable: AirtableConfig
     todoist: TodoistConfig
     mongo: MongoConfig
     telegram: TelegramConfig
