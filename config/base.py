@@ -76,6 +76,7 @@ class SentryConfig(BaseModel):
 class AirtableConfig(BaseModel):
     token: str
     base_id: str
+    cache: bool = True
     table_name: str = "Tools"
 
     @property
