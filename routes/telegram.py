@@ -12,6 +12,7 @@ router = APIRouter(
 
 @router.post("/webhook")
 async def telegram_webhook(request: Request, background_tasks: BackgroundTasks):
+    """Telegram webhook endpoint. Receives updates from the telegram bot."""
     data = await request.json()
     text = data["message"]["text"]
 
