@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "todoist_automations"
-version = "0.3.1-alpha.4"
+version = "0.3.1"
 description = ""
 authors = ["Dimitris <dimitris.strantsalis@workable.com>"]
 
