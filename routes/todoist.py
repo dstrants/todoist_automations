@@ -20,6 +20,7 @@ router = APIRouter(
 @router.post("/webhooks")
 async def todoist_webhooks(request: Request, response: Response,
                            webhook: TodoistWebhook, background_tasks: BackgroundTasks):
+    """Todoist webhook endpoint. Receives automated updates from the todoist api."""
     if not await todoist_validate_webhook_hmac(request=request):
         config.logger.info("Invalid webhook HMAC")
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -39,12 +40,19 @@ async def todoist_webhooks(request: Request, response: Response,
 
 @router.get("/login")
 async def todoist_login_redirect():
+    """Redirects the user to the todoist login page to initiate oauth2 flow."""
     return RedirectResponse(config.todoist.oauth_full_url)
 
 
 @router.get("/callback")
 async def todoist_redirect_callback(response: Response, background_tasks: BackgroundTasks,
                                     code: str = "", state: str = ""):
+    """
+        Callback endpoint for the todoist oauth2 flow.
+
+        Receives the code and state parameters from the todoist login page and also
+        initiates the telegram auth flow in order to receive the telegram chat id.
+    """
     if state != config.todoist.state_string:
         config.logger.info("Invalid state string from todoist callback")
         response.status_code = status.HTTP_403_FORBIDDEN
