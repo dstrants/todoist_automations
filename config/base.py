@@ -1,6 +1,7 @@
 import logging
 from typing import Optional
 
+from github import Github
 from pyairtable.api.table import Table
 from pydantic import BaseModel, BaseSettings
 from pymongo.collection import Collection
@@ -84,12 +85,21 @@ class AirtableConfig(BaseModel):
         return Table(self.token, self.base_id, self.table_name)
 
 
+class GithubConfig(BaseModel):
+    token: str | None = None
+
+    @property
+    def client(self) -> Github:
+        return Github(self.token)
+
+
 class Config(BaseSettings):
     airtable: AirtableConfig
     todoist: TodoistConfig
     mongo: MongoConfig
     telegram: TelegramConfig
     sentry: SentryConfig = SentryConfig()
+    github: GithubConfig = GithubConfig()
 
     api_key: str
 
