@@ -5,9 +5,11 @@ from config.base import config
 
 client = TestClient(app)
 
+NONEXISTENT_REPO = "fastapi/fastapi-does-not-exist"
+
 
 def test_missing_auth_header() -> None:
-    resp = client.post("/tools/new", {"full_name": "fastapi/fastapi"})
+    resp = client.post("/tools/new", {"full_name": NONEXISTENT_REPO})
     assert resp.status_code == 403
     assert resp.json() == {"detail": "Not authenticated"}
 
@@ -15,7 +17,7 @@ def test_missing_auth_header() -> None:
 def test_wrong_auth_header() -> None:
     resp = client.post(
         "/tools/new",
-        {"full_name": "fastapi/fastapi"},
+        {"full_name": NONEXISTENT_REPO},
         headers={"X-DOISTER-API-KEY": "Bearer wrong"}
     )
     assert resp.status_code == 403
@@ -25,7 +27,7 @@ def test_wrong_auth_header() -> None:
 def test_correct_auth_header_non_existent_repo():
     resp = client.post(
         "/tools/new",
-        json={"full_name": "fastapi/fastapi"},
+        json={"full_name": NONEXISTENT_REPO},
         headers={"X-DOISTER-API-KEY": config.api_key}
     )
     assert resp.status_code == 200
