@@ -7,32 +7,44 @@ from services.todoist import users
 
 
 def generate_telegram_authentication_string() -> str:
+    """Generates a random string of length 48"""
     return "".join(random.choice(string.ascii_letters) for _ in range(48))
 
 
 def create_authentication_code(code: str, todoist_user_id: int):
+    """Creates a new authentication code for telegram for a given user"""
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     telegram_authentication_code.insert_one({"code": code, "todoist_user_id": todoist_user_id})
     config.logger.info("Created telegram authentication code for user %s", todoist_user_id)
 
 
 def get_authentication_code_from_code(code: str) -> dict:
+    """Retrieves the authentication code from the database"""
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     return telegram_authentication_code.find_one({"code": code})
 
 
 def get_authentication_code_from_user_id(todoist_user_id: int) -> dict:
+    """Retrieves the authentication code from the database based on user id"""
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     return telegram_authentication_code.find_one({"todoist_user_id": todoist_user_id})
 
 
 def delete_authentication_code_from_code(code: str) -> None:
+    """Deletes the authentication code from the database"""
     telegram_authentication_code = config.mongo.telegram_collection("authentication_codes")
     telegram_authentication_code.delete_one({"code": code})
     config.logger.info("Deleted telegram authentication code %s", code)
 
 
 def complete_telegram_verification(webhook_body: dict):
+    """
+        Completes the telegram authentication process
+
+        Checks if the received command is the right one and if the user exists in the database.
+        Then stores the user's `chat_id` in the database to be used for sending messages.
+        Finally sends a message to the user to confirm the authentication.
+    """
     if webhook_body["message"]["text"].startswith("/start"):
         code = webhook_body["message"]["text"].split(" ")[1]
         if result := get_authentication_code_from_code(code=code):
@@ -57,6 +69,7 @@ def complete_telegram_verification(webhook_body: dict):
 
 
 def start_telegram_authentication_process(todoist_user_id: int) -> str:
+    """Starts the telegram authentication process"""
     if not (telegram_authentication_code_dict := get_authentication_code_from_user_id(todoist_user_id)):
         config.logger.info("No authentication code found for user %s creating a new one", todoist_user_id)
         telegram_authentication_code = generate_telegram_authentication_string()
