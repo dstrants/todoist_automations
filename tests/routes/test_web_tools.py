@@ -1,4 +1,6 @@
+import pytest
 from fastapi.testclient import TestClient
+from github import GithubException
 
 from main import app
 from config.base import config
@@ -25,10 +27,11 @@ def test_wrong_auth_header() -> None:
 
 
 def test_correct_auth_header_non_existent_repo():
-    resp = client.post(
-        "/tools/new",
-        json={"full_name": NONEXISTENT_REPO},
-        headers={"X-DOISTER-API-KEY": config.api_key}
-    )
-    assert resp.status_code == 200
-    assert resp.json() == {"message": "Repo has been created"}
+    with pytest.raises(GithubException):
+        resp = client.post(
+            "/tools/new",
+            json={"full_name": NONEXISTENT_REPO},
+            headers={"X-DOISTER-API-KEY": config.api_key}
+        )
+        assert resp.status_code == 200
+        assert resp.json() == {"message": "Repo has been created"}

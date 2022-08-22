@@ -17,6 +17,6 @@ class NewRepo(BaseModel):
 
 
 @router.post("/new")
-async def tools_webhook(repo: NewRepo, background_tasks: BackgroundTasks, api_key: APIKeyBase = Depends(get_api_key)):
+async def tools_webhook(repo: NewRepo, background_tasks: BackgroundTasks, _api_key: APIKeyBase = Depends(get_api_key)):
     background_tasks.add_task(create_record_from_repo, repo.full_name)
     return {"message": "Repo has been created"}
