@@ -3,6 +3,20 @@ on: push
 
 jobs:
   tests:
+    services:
+      mongo:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS}
+          MONGO_INITDB_DATABASE: test
+        options: >-
+                --health-cmd mongo
+                --health-interval 10s
+                --health-timeout 5s
+                --health-retries 5
+        ports:
+          - 27017:27017
     strategy:
       fail-fast: false
       matrix:
@@ -30,6 +44,7 @@ jobs:
       - name: Linting
         run: pytest --pylama
         env:
+          DOISTER_API_KEY: ${DOISTER_API_KEY}
           DOISTER_ENV: ${{ secrets.DOISTER_ENV }}
           DOISTER_HOST: ${{ secrets.DOISTER_HOST }}
           DOISTER_AIRTABLE__TOKEN: ${{ secrets.DOISTER_AIRTABLE__TOKEN }}
