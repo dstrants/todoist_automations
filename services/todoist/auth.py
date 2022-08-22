@@ -6,6 +6,11 @@ from services.todoist import initial_sync
 
 
 async def todoist_oauth_flow_step_2(code: str, full_sync=False):
+    """
+    Step 2 of the todoist oauth flow.
+
+    It conditionally triggers a full sync for the authenticated user.
+    """
     token = retrieve_user_token(code)
     user_info = await retrieve_user_info(token, full_sync=full_sync)
 
@@ -15,6 +20,9 @@ async def todoist_oauth_flow_step_2(code: str, full_sync=False):
 
 
 def retrieve_user_token(code: str) -> str:
+    """
+    Retrieves the user token from the todoist API.
+    """
     resp = requests.post("https://todoist.com/oauth/access_token", {
         'client_id': config.todoist.client_id,
         'client_secret': config.todoist.client_secret,
@@ -27,6 +35,11 @@ def retrieve_user_token(code: str) -> str:
 
 
 async def retrieve_user_info(token: str, full_sync=False) -> dict:
+    """
+        Retrieves the user info from the todoist API.
+
+        It conditionally triggers a full sync for the authenticated user.
+    """
     api = SyncTodoistAPI(token)
     api.sync()
 

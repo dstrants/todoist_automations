@@ -7,6 +7,7 @@ from models.todoist import TodoistItem
 
 
 def helper_load_priority_labels() -> dict[str, int]:
+    """Helper that retrieves the priority labels from the database."""
     labels_collection = config.mongo.todoist_collection("labels")
     labels = {}
 
@@ -22,6 +23,7 @@ def helper_load_priority_labels() -> dict[str, int]:
 
 
 def helper_load_user_todoist_token(user_id: int) -> str:
+    """Helper that retrieves the todoist token from the database."""
     users_collection = config.mongo.todoist_collection("users")
     user = users_collection.find_one({"id": user_id})
 
@@ -33,6 +35,7 @@ def helper_load_user_todoist_token(user_id: int) -> str:
 
 
 def check_if_size_label_missing(item: TodoistItem) -> Tuple[set[int], dict[str, int]]:
+    """Checks if the item already has a size label."""
     size_labels = helper_load_priority_labels()
     size_labels_ids = set(size_labels.values())
     item_labels_ids = set(item.labels)
@@ -41,6 +44,12 @@ def check_if_size_label_missing(item: TodoistItem) -> Tuple[set[int], dict[str, 
 
 
 def automations_priority_labelling(item: TodoistItem) -> None:
+    """
+
+        Automatically labels the item with the default priority label.
+
+        Only if the task does not have one already
+    """
     common_labels, size_labels = check_if_size_label_missing(item)
     if common_labels:
         config.logger.info("Item %s already has a priority label", item.id)

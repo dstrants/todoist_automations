@@ -6,6 +6,11 @@ from services.airtable.records import create_record
 
 
 def form_repo_dict(repo: Repository) -> dict:
+    """
+        Forms a dict from a Repository object.
+
+        It only uses the fields that are needed in the airtable database.
+    """
     return {
         "Name": repo.name,
         "Github": repo.html_url,
@@ -18,11 +23,17 @@ def form_repo_dict(repo: Repository) -> dict:
 
 
 def save_to_mongo(repo: dict) -> None:
+    """Saves a repo to the mongo database."""
     tools = config.mongo.tools_collection()
     tools.insert_one(repo)
 
 
 def create_record_from_repo(repo_name: str) -> None:
+    """
+        Saves a repo to the airtable database.
+
+        If it is configured it will also cache the data to mongo.
+    """
     repo = get_repo(repo_name)
     repo_dict = form_repo_dict(repo)
 

@@ -6,7 +6,9 @@ from fastapi import Request
 from config.base import config
 
 
+# TODO: This should be moved to security middleware module
 async def todoist_validate_webhook_hmac(request: Request) -> bool:
+    """Performs a validation of the todoist webhook hmac."""
     if "X-Todoist-Hmac-SHA256" not in request.headers:
         config.logger.warning("Missing X-Todoist-Hmac-SHA256 header")
         return False

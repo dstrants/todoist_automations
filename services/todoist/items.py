@@ -6,6 +6,7 @@ from services.todoist import automations_items
 
 
 def create_or_update_task(webhook: TodoistWebhook) -> None:
+    """Creates or updates a task in the database."""
     items_collection = config.mongo.todoist_collection()
     items_collection.update_one(
         {"id": webhook.event_data.id},
@@ -17,12 +18,19 @@ def create_or_update_task(webhook: TodoistWebhook) -> None:
 
 
 def delete_task(webhook: TodoistWebhook) -> None:
+    """Deletes a task from the database."""
     items_collection = config.mongo.todoist_collection()
     items_collection.delete_one({"id": webhook.event_data.id})
     config.logger.info("Deleted task %s", webhook.event_data.id)
 
 
 def complete_task(webhook: TodoistWebhook) -> None:
+    """
+        Mark a task as completed in the database.
+
+        It also creates a audit logging entry for the completion.
+    """
+
     create_or_update_task(webhook=webhook)
 
     log_collection = config.mongo.todoist_collection("completion_logs")
