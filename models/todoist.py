@@ -10,7 +10,7 @@ COLORS = [
 
 
 class DueDate(BaseModel):
-
+    """Todoist DueDate of a task."""
     date: str
     timezone: Optional[str]
     string: str
@@ -19,7 +19,7 @@ class DueDate(BaseModel):
 
 
 class TodoistItem(BaseModel):
-
+    """Todoist Item (Task) model."""
     id: int
     content: str
     checked: bool
@@ -45,7 +45,7 @@ class TodoistItem(BaseModel):
 
 
 class TodoistProject(BaseModel):
-
+    """Todoist Project model."""
     child_order: int
     collapsed: bool
     color: int
@@ -66,7 +66,7 @@ class TodoistProject(BaseModel):
 
 
 class TodoistLabel(BaseModel):
-
+    """Todoist Label model."""
     color: int
     id: int
     is_deleted: bool
@@ -80,6 +80,7 @@ class TodoistLabel(BaseModel):
 
 
 class TodoistWebhookInitiator(BaseModel):
+    """Todoist User model inside webhook body."""
     email: str
     full_name: str
     id: str
@@ -88,6 +89,7 @@ class TodoistWebhookInitiator(BaseModel):
 
 
 class TodoistWebhook(BaseModel):
+    """Todoist incoming webhook model."""
     event_name: str
     user_id: int
     event_data: TodoistItem
